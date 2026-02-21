@@ -3,7 +3,7 @@ project:
   title:        "3x3_Matrix_Multiplicator"      # Project title
   author:       "LMRC"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""A synchronous 3x3 matrix multiplication accelerator written in Verilog. Computes C = A x B using 8-bit inputs and produces 16-bit outputs in one clock cycle"      # One line description of what your project does
+  description:  "A synchronous 3x3 matrix multiplication accelerator written in Verilog. Computes C = A x B using 8-bit inputs and produces 16-bit outputs in one clock cycle"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     0       # Clock frequency in Hz (or 0 if not applicable)
 
