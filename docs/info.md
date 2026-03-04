@@ -65,6 +65,7 @@ C = | 30  24  18 |
     | 84  69  54 |
     |138 114  90 |
 
+This is able to show the entirety of the functionality of the implementation, therefore working as a perfect implementation!
 
 ## External hardware
 
