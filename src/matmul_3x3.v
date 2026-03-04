@@ -18,7 +18,8 @@ module matmul_3x3 (
     reg [3:0] i, j, k;
     reg [3:0] out_index;
     reg [15:0] acc;
-
+    
+    reg done_pulse;
     reg computing;
     reg outputting;
 
@@ -29,6 +30,7 @@ module matmul_3x3 (
             load_count <= 0;
             done <= 0;
             computing <= 0;
+            done_pulse <= 0;
             outputting <= 0;
             i <= 0; j <= 0; k <= 0;
             out_index <= 0;
@@ -75,8 +77,7 @@ module matmul_3x3 (
                         j <= 0;
                         if (i == 2) begin
                             computing <= 0;
-                            outputting <= 1;
-                            out_index <= 0;
+                            done_pulse <= 1;
                         end else begin
                             i <= i + 1;
                         end
@@ -89,10 +90,15 @@ module matmul_3x3 (
             end
 
             // OUTPUT PHASE
-            if (outputting) begin
-                done <= 1;
+            if (done_pulse) begin
+                done <= 1;          // raise done first
+                outputting <= 1;    // prepare to output
+                out_index <= 0;
+                done_pulse <= 0;    // clear pulse
+            end
+            else if (outputting) begin
+                done <= 1;          // keep done high while outputting
                 data_out <= C[out_index];
-            
                 if (out_index == 8) begin
                     outputting <= 0;
                 end else begin
