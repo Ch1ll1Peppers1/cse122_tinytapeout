@@ -81,7 +81,14 @@ async def test_project(dut):
     # -------------------------
     dut._log.info("Waiting for done...")
 
-    while dut.uo_out[4].value != 1:
+    while True:
+        val = dut.uo_out.value
+    
+        # Wait until signal has no X/Z
+        if val.is_resolvable:
+            if (val.to_unsigned() >> 4) & 1:
+                break
+    
         await RisingEdge(dut.clk)
 
     dut._log.info("Computation complete!")
@@ -94,7 +101,8 @@ async def test_project(dut):
 
     for i in range(9):
         await ClockCycles(dut.clk, 1)
-        result = dut.uo_out[3:0].value.to_unsigned()
+        val = dut.uo_out.value
+        result = val.to_unsigned() & 0xF
         results.append(result)
 
     # Since output is 4-bit nibble, we only check lower 4 bits
