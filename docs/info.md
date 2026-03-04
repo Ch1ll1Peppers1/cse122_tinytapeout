@@ -7,14 +7,74 @@ You can also include images in this folder and reference them in the markdown. E
 512 kb in size, and the combined size of all images must be less than 1 MB.
 -->
 
-## How it works
+## 3×3 Matrix Multiplication Accelerator
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus placerat augue lectus, vel hendrerit neque euismod sed. Fusce id tincidunt tellus. In facilisis nibh odio, eu mollis turpis ultrices nec. Aenean facilisis mollis vulputate. In sit amet ipsum in mauris ullamcorper euismod gravida elementum neque. Donec blandit nisi nec neque molestie pellentesque. In pulvinar metus ac felis consequat, a condimentum risus viverra. Integer sed bibendum leo. Vivamus ornare vitae dui sit amet ullamcorper. Aenean nec congue nunc. Aliquam gravida efficitur maximus. Nunc commodo tempor lacus nec malesuada. Fusce id arcu at enim egestas congue sed non nunc. Curabitur quis velit nec enim laoreet consequat eu euismod arcu. Duis placerat mi vitae ultricies porta. Nulla suscipit, sapien in egestas ultrices, enim magna congue leo, ut sollicitudin mauris augue at elit.
+Tiny Tapeout Project
+Author: LMRC
+
+This project implements a synchronous 3×3 matrix multiplication accelerator in Verilog for Tiny Tapeout. It computes: A X B = C, where A & B are a 3×3 matrix of 8-bit unsigned integers and C is a 3×3 matrix of 16-bit unsigned integers. 
+
+## How it works
+When load = 1:
+ - First 9 values are stored into matrix A
+ - Next 9 values are stored into matrix B
+ - One element is loaded per clock cycle
+
+When start = 1 (single-cycle pulse):
+ - The FSM begins matrix multiplication
+ - Computation proceeds sequentially
+ - Each output element is calculated as: cij = ai1 · b1j + ai2 · b2j + ai3 ·  b3j
+
+Total compute cycles:
+9 outputs × 3 multiply-accumulate operations = 27 cycles
+
+When computation finishes:
+ - done is asserted high for one cycle
+ - Results are available for readout
 
 ## How to test
 
-Vestibulum vestibulum lacus vitae orci iaculis, sit amet consectetur turpis cursus. Maecenas accumsan commodo nisi, in efficitur lectus lacinia quis. Nulla cursus urna sit amet tellus tempus placerat. Integer egestas id metus at consectetur. Vivamus venenatis quis lorem eget gravida. Pellentesque in quam pharetra, lacinia velit quis, tincidunt enim. Aliquam et viverra ligula. Curabitur sagittis, sapien vel mollis facilisis, orci sapien feugiat dui, nec porta elit quam finibus nisl. Phasellus non feugiat orci, sed ultricies ipsum. Phasellus malesuada sapien quis odio viverra ullamcorper posuere et orci.
+Run cd test and make
+
+This will:
+ - Compile RTL
+ - Run cocotb test
+ - Generate waveform files
+ - Produce results.xml
+
+The testbench:
+ - Resets the design
+ - Loads matrices A and B
+ - Pulses start
+ - Waits for done
+ - Verifies output values
+
+Example test matrices:
+
+A = |1 2 3|
+    |4 5 6|
+    |7 8 9|
+
+B = |9 8 7|
+    |6 5 4|
+    |3 2 1|
+
+Expected result:
+
+C = | 30  24  18 |
+    | 84  69  54 |
+    |138 114  90 |
+
 
 ## External hardware
 
-Donec nec ultrices magna. Donec sodales quam vel diam consectetur, eu efficitur massa convallis. Morbi id eros efficitur enim congue consectetur. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Duis risus sem, cursus non varius vel, condimentum eget purus. Maecenas commodo mauris sit amet ultrices malesuada. Donec scelerisque eleifend enim non interdum. Vestibulum tortor nulla, imperdiet a fermentum vitae, blandit et sapien. Nam porttitor mi quis neque vestibulum, eget consequat turpis tristique. Suspendisse eleifend, justo nec malesuada placerat, tortor mauris convallis lorem, eu ullamcorper ex odio ac sapien. Nullam vel elit ultricies, aliquet turpis in, volutpat dui. Cras ac tempus lectus, et egestas tortor.
+To use this design on a physical Tiny Tapeout board:
+ - Required Signals
+ - Clock (provided by TT board)
+ - Reset (active low)
+ - 8 digital inputs
+ - 8 digital outputs
+
+## Acknowledgement use of AI
+
+This project was completed with the help of Generative AI under what was designated as allowed under the instructions, specifically: Helping summarize this steps and help debug big errors in code to get to the current working implementation.
