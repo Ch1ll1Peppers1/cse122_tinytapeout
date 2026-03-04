@@ -90,15 +90,15 @@ module matmul_3x3 (
 
             // OUTPUT PHASE
             if (outputting) begin
+                done <= 1;
                 data_out <= C[out_index];
-                done <= 1;   // keep done high while outputting
-                out_index <= out_index + 1;
-
+            
                 if (out_index == 8) begin
                     outputting <= 0;
+                end else begin
+                    out_index <= out_index + 1;
                 end
             end
-
         end
     end
 
