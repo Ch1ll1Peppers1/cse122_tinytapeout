@@ -99,18 +99,20 @@ async def test_project(dut):
 
     results = []
 
-    print("Hardware result:", results)
-    print("Expected:", C_expected)
-
     for i in range(9):
         await ClockCycles(dut.clk, 1)
         val = dut.uo_out.value
         result = val.to_unsigned() & 0xF
         results.append(result)
 
+    print("Hardware result:", results)
+    print("Expected:", C_expected)
+    
     # Since output is 4-bit nibble, we only check lower 4 bits
     for i in range(9):
         assert (C_expected[i] & 0xF) == results[i], \
             f"Mismatch at index {i}: Expected {C_expected[i] & 0xF}, got {results[i]}"
+    print("Hardware result:", results)
+    print("Expected:", C_expected)
 
     dut._log.info("All tests passed!")
